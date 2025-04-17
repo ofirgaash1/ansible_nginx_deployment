@@ -19,7 +19,6 @@ pipeline {
                             RESPONSE=$(curl --silent --header "X-Vault-Token: $VAULT_TOKEN" --request GET http://vault:8200/v1/secret/aws/privat-key)
                             
                             # Extract the private key using basic shell commands
-                            # Locate the beginning of the key and extract to the end
                             echo "$RESPONSE" | sed 's/.*"value":"//' | sed 's/".*//' > ~/.ssh_temp/ssh_key.pem
                             
                             # Fix newlines (replace \\n with actual newlines)
@@ -43,27 +42,27 @@ pipeline {
         stage('Run Ansible Playbook') {
             steps {
                 script {
-
-                    sh '''
-                        # Check if playbook exists in workspace
-                        if [ -f "playbook-Nginx.yml" ]; then
-                            echo "Using playbook from workspace"
-                        else
-                            echo "ERROR: playbook-Nginx.yml not found in workspace"
-                            exit 1
-                        fi
+                    // Execute the playbook directly on the remote server
+                    sh """
+                        # Copy the playbook to the remote server
+                        scp -o StrictHostKeyChecking=no -i ~/.ssh_temp/ssh_key.pem playbook-Nginx.yml ${VM_USER}@${VM_HOST}:~/playbook-Nginx.yml
                         
-                        # Create a simple ansible inventory file for this host
-                        echo "[webserver]" > ~/.ssh_temp/inventory
-                        echo "${VM_HOST} ansible_user=${VM_USER} ansible_ssh_private_key_file=~/.ssh_temp/ssh_key.pem ansible_ssh_common_args='-o StrictHostKeyChecking=no'" >> ~/.ssh_temp/inventory
-                        
-                        # Display inventory for debugging
-                        cat ~/.ssh_temp/inventory
-                        
-                        # Run the playbook
-                        ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ~/.ssh_temp/inventory playbook-Nginx.yml
-                    '''
-
+                        # Ensure Ansible is installed on the remote server
+                        ssh -o StrictHostKeyChecking=no -i ~/.ssh_temp/ssh_key.pem ${VM_USER}@${VM_HOST} '
+                            if ! command -v ansible-playbook &> /dev/null; then
+                                echo "Installing Ansible on the remote server..."
+                                sudo apt-get update
+                                sudo apt-get install -y ansible
+                            fi
+                            
+                            # Create a simple localhost inventory file
+                            echo "[webserver]" > ~/inventory
+                            echo "localhost ansible_connection=local" >> ~/inventory
+                            
+                            # Run the playbook
+                            ansible-playbook -i ~/inventory ~/playbook-Nginx.yml
+                        '
+                    """
                 }
             }
         }
