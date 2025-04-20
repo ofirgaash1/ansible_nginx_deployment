@@ -1,0 +1,5 @@
+---
+- name: Install and configure nginx with port from Consul
+  hosts: servers
+  become: yes
+
