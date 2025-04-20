@@ -3,3 +3,6 @@
   hosts: servers
   become: yes
 
+  roles:
+    - role: nginx
+   
