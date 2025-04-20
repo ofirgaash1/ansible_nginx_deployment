@@ -1,0 +1,46 @@
+---
+# tasks file for nginx
+    - name: Install nginx
+      apt:
+        name: nginx
+        state: latest
+        update_cache: yes
+
+    - name: Get Nginx port from local Consul
+      uri:
+        url: "http://localhost:8500/v1/kv/Nginx/Nginx-port?raw"
+        return_content: yes
+      register: nginx_port_response
+      delegate_to: localhost
+      become: false
+
+
+    - name: Print the Nginx port from Consul
+      debug:
+        msg: "Nginx will run on port: {{ nginx_port_response.content }}"
+
+    - name: Deploy nginx.conf rendered with the selected port
+      template:
+        src: templates/nginx.conf.j2
+        dest: /etc/nginx/sites-available/default
+        owner: root
+        group: root
+        mode: '0644'
+
+
+    - name: Download custom HTML page from Sheldon Brown
+      get_url:
+        url: https://www.sheldonbrown.com/web_sample1.html
+        dest: /var/www/html/index.html
+        mode: '0644'
+
+    - name: custom HTML page
+      copy:
+        src: files/index.html 
+        dest: /var/www/html/index.html
+        remote_src: yes 
+
+    - name: Restart nginx to apply changes
+      service:
+        name: nginx
+        state: restarted
