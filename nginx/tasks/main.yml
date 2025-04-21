@@ -24,7 +24,7 @@
       copy:
         src: files/index.html 
         dest: /var/www/html/index.html
-        remote_src: yes 
+        remote_src: no 
       notify: Restart Nginx
 
     - name: Restart nginx to apply changes

@@ -1,0 +1,2 @@
+[servers]
+devops1.ofirgaash.click ansible_user=ofir1
