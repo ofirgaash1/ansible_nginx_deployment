@@ -9,7 +9,7 @@
 
     - name: Print the Nginx port from Consul
       debug:
-        msg: "Nginx will run on port: {{ nginx_port_response }}"
+        msg: "Nginx will run on port: {{ nginx_port }}"
 
     - name: Deploy nginx.conf rendered with the selected port
       template:
@@ -19,15 +19,12 @@
         group: root
         mode: '0644'
       notify: Restart Nginx
+      tags:
+        - deploy
 
     - name: custom HTML page
       copy:
         src: files/index.html 
         dest: /var/www/html/index.html
-        remote_src: no 
       notify: Restart Nginx
 
-    - name: Restart nginx to apply changes
-      service:
-        name: nginx
-        state: restarted
