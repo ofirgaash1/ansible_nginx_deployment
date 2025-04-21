@@ -18,19 +18,14 @@
         owner: root
         group: root
         mode: '0644'
-
-
-    - name: Download custom HTML page from Sheldon Brown
-      get_url:
-        url: https://www.sheldonbrown.com/web_sample1.html
-        dest: /var/www/html/index.html
-        mode: '0644'
+      notify: Restart Nginx
 
     - name: custom HTML page
       copy:
         src: files/index.html 
         dest: /var/www/html/index.html
         remote_src: yes 
+      notify: Restart Nginx
 
     - name: Restart nginx to apply changes
       service:
