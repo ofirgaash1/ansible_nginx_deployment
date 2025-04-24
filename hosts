@@ -1,2 +1,2 @@
 [servers]
-devops1.ofirgaash.click ansible_user=ofir1
+51.17.183.42 ansible_user=ubuntu
