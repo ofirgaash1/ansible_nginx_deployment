@@ -23,7 +23,7 @@
 
     - name: Deploy nginx.conf rendered with NGINX_STRING
       template:
-        src: files/html.j2
+        src: html.j2
         dest: /var/www/html/index.html
         owner: root
         group: root
