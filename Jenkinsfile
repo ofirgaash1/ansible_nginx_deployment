@@ -35,10 +35,18 @@ pipeline {
                         echo "Generating Ansible inventory and config..."
                         cat <<EOF > hosts
                         [BLUE]
-                        51.17.22.0 ansible_user=ubuntu
+                        51.17.22.0
+                        
                         [GREEN]
-                        51.17.79.115 ansible_user=ubuntu
+                        51.17.79.115
+                        
+                        [BLUE:vars]
+                        ansible_user=ubuntu
+                        
+                        [GREEN:vars]
+                        ansible_user=ubuntu
                         EOF
+
 
                         cat <<EOF > ansible.cfg
                         [defaults]
