@@ -1,2 +1,5 @@
-[servers]
-51.17.183.42 ansible_user=ubuntu
+[GREEN]
+51.17.22.0 ansible_user=ubuntu
+
+[BLUE]
+51.17.79.115 ansible_user=ubuntu
