@@ -34,24 +34,27 @@ pipeline {
 
                         echo "Generating Ansible inventory and config..."
                         cat <<EOF > hosts
-                        [BLUE]
-                        51.17.22.0
-                        
-                        [GREEN]
-                        51.17.79.115
-                        
-                        [BLUE:vars]
-                        ansible_user=ubuntu
-                        
-                        [GREEN:vars]
-                        ansible_user=ubuntu
-                        EOF
+[BLUE]
+51.17.22.0
 
+[GREEN]
+51.17.79.115
+
+[BLUE:vars]
+ansible_user=ubuntu
+
+[GREEN:vars]
+ansible_user=ubuntu
+EOF
+
+                        echo "======= HOSTS FILE ======="
+                        cat hosts
+                        echo "=========================="
 
                         cat <<EOF > ansible.cfg
-                        [defaults]
-                        host_key_checking = False
-                        EOF
+[defaults]
+host_key_checking = False
+EOF
 
                         echo "Configuring AWS CLI..."
                         aws configure set aws_access_key_id \$YOUR_KEY
