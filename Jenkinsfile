@@ -68,7 +68,7 @@ EOF
 
                         echo "Running Ansible playbook on BLUE..."
                         ansible-playbook -i hosts ${params.ANSIBLE_PLAYBOOK} \
-                          -e "nginx_port=${params.NGINX_PORT} NGINX_STRING='${params.NGINX_STRING}'" \
+                          -e "nginx_port=${params.NGINX_PORT} NGINX_STRING='${params.NGINX_STRING} from BLUE'" \
                           --limit BLUE \
                           --private-key \$KEYPAIR_PATH
 
@@ -113,7 +113,7 @@ EOF
 
                         echo "Running Ansible playbook on GREEN..."
                         ansible-playbook -i hosts ${params.ANSIBLE_PLAYBOOK} \
-                          -e "nginx_port=${params.NGINX_PORT} NGINX_STRING='${params.NGINX_STRING}'" \
+                          -e "nginx_port=${params.NGINX_PORT} NGINX_STRING='${params.NGINX_STRING} from GREEN'" \
                           --limit GREEN \
                           --private-key \$KEYPAIR_PATH
 
