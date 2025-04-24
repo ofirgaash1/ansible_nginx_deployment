@@ -18,13 +18,16 @@
         owner: root
         group: root
         mode: '0644'
-      notify: Restart Nginx
       tags:
         - deploy
 
-    - name: custom HTML page
-      copy:
-        src: files/index.html 
+    - name: Deploy nginx.conf rendered with NGINX_STRING
+      template:
+        src: files/html.j2
         dest: /var/www/html/index.html
+        owner: root
+        group: root
+        mode: '0644'
       notify: Restart Nginx
+
 
